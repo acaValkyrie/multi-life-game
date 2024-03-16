@@ -118,6 +118,7 @@ pub fn main() {
         std::mem::swap(&mut cell_viabilities_before, &mut cell_viabilities_after);
 
         canvas.present();
+        std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 20));
         std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }
 }
