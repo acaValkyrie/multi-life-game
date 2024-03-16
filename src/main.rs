@@ -1,5 +1,4 @@
 use sdl2::pixels::Color;
-use sdl2::keyboard::{Scancode, KeyboardState};
 use sdl2::rect::Rect;
 use std::time::Duration;
 use rand::Rng;
@@ -60,7 +59,7 @@ pub fn main() {
     let window_height = cell_size*CELL_BOX_WIDTH_COUNT as u32;
     let (mut canvas, mut event_pump) 
         = sdl_modules::sdl_setup(window_width, window_height);
-    
+
     // イベントループ
     'running: loop {
         if sdl_modules::is_end_event(&mut event_pump) { break 'running; }
