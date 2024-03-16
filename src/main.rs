@@ -41,8 +41,6 @@ impl Cell {
 }
 
 pub fn main() {
-    let (mut canvas, mut event_pump) 
-        = sdl_modules::sdl_setup(800, 600);
     
     let cell_size: u32 = 2;
     let color = Color::RGB(255, 255, 255);
@@ -57,6 +55,11 @@ pub fn main() {
             cell_viabilities_before[i][j] = rng.gen();
         }
     }
+    
+    let window_width = cell_size*CELL_BOX_WIDTH_COUNT as u32;
+    let window_height = cell_size*CELL_BOX_WIDTH_COUNT as u32;
+    let (mut canvas, mut event_pump) 
+        = sdl_modules::sdl_setup(window_width, window_height);
     
     // イベントループ
     'running: loop {
