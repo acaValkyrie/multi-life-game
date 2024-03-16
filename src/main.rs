@@ -41,8 +41,10 @@ impl Cell {
 
 pub fn main() {
     
-    let cell_size: u32 = 2;
-    let color = Color::RGB(255, 255, 255);
+    let cell_size: u32 = 4;
+    let color_white = Color::RGB(173, 186, 199);
+    let color_green = Color::RGB(133, 219, 109);
+    let color = color_green;
     let mut cell = Cell::new(0, 0, color, cell_size);
     
     const CELL_BOX_WIDTH_COUNT: usize = 256;
