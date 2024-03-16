@@ -2,6 +2,7 @@ use sdl2::pixels::Color;
 use sdl2::keyboard::{Scancode, KeyboardState};
 use sdl2::rect::Rect;
 use std::time::Duration;
+use rand::Rng;
 
 mod sdl_modules;
 
@@ -33,17 +34,27 @@ impl Cell {
     fn draw(&self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>){
         self.object.draw(canvas);
     }
+    fn set_position(&mut self, x: u32, y: u32){
+        self.object.x = x;
+        self.object.y = y;
+    }
 }
 
 pub fn main() {
     let (mut canvas, mut event_pump) 
         = sdl_modules::sdl_setup(800, 600);
     
-    const CELL_BOX_WIDTH_COUNT: usize = 10;
-    let mut cell_viabilities: [[bool; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT] = [[false; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT];
+    let cell_size: u32 = 2;
+    let color = Color::RGB(255, 255, 255);
+    let mut cell = Cell::new(0, 0, color, cell_size);
+    
+    const CELL_BOX_WIDTH_COUNT: usize = 256;
+    let mut cell_viabilities_before: [[bool; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT] = [[false; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT];
+    let mut cell_viabilities_after: [[bool; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT] = [[false; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT];
+    let mut rng = rand::thread_rng();
     for i in 0..CELL_BOX_WIDTH_COUNT{
         for j in 0..CELL_BOX_WIDTH_COUNT{
-            cell_viabilities[i][j] = true;
+            cell_viabilities_before[i][j] = rng.gen();
         }
     }
     
@@ -54,15 +65,53 @@ pub fn main() {
         // キャンバスの初期化
         canvas.set_draw_color(Color::RGB(0, 0, 0));
         canvas.clear();
+
+        for i in 0..CELL_BOX_WIDTH_COUNT{
+            for j in 0..CELL_BOX_WIDTH_COUNT{
+                // beforeを元にしてafterを作成
+                let mut count: u32 = 0;
+                for x in 0..3{
+                    for y in 0..3{
+                        if x == 1 && y == 1{ continue; }
+                        let x_index: i32 = i as i32 + x - 1;
+                        let y_index: i32 = j as i32 + y - 1;
+                        if x_index < 0 || x_index >= CELL_BOX_WIDTH_COUNT as i32 || y_index < 0 || y_index >= CELL_BOX_WIDTH_COUNT as i32{ continue; }
+                        if cell_viabilities_before[x_index as usize][y_index as usize] == true{
+                            count += 1;
+                        }
+                    }
+                }
+                if cell_viabilities_before[i][j] == true{
+                    if count == 2 || count == 3{
+                        cell_viabilities_after[i][j] = true;
+                    }else{
+                        cell_viabilities_after[i][j] = false;
+                    }
+                }else{
+                    if count == 3{
+                        cell_viabilities_after[i][j] = true;
+                    }else{
+                        cell_viabilities_after[i][j] = false;
+                    }
+                }
+            }
+        }
+        
         
         for i in 0..CELL_BOX_WIDTH_COUNT{
             for j in 0..CELL_BOX_WIDTH_COUNT{
-                if cell_viabilities[i][j] == true{
-                    let cell = Cell::new((i * 50) as u32, (j * 50) as u32, Color::RGB(255, 255, 255), 50);
+                if cell_viabilities_after[i][j] == true{
+                    let x: u32 = (i * cell_size as usize) as u32;
+                    let y: u32 = (j * cell_size as usize) as u32;
+                    cell.set_position(x, y);
                     cell.draw(&mut canvas);
                 }
             }
         }
+
+        // afterの内容をbeforeにコピー
+        // afterのさすアドレスとbeforeのさすアドレスを交換
+        std::mem::swap(&mut cell_viabilities_before, &mut cell_viabilities_after);
 
         canvas.present();
         std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
