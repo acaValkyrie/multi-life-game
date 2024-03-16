@@ -67,7 +67,7 @@ pub fn main() {
         if sdl_modules::is_end_event(&mut event_pump) { break 'running; }
         
         // キャンバスの初期化
-        canvas.set_draw_color(Color::RGB(0, 0, 0));
+        canvas.set_draw_color(Color::RGB(28, 33, 40));
         canvas.clear();
 
         for i in 0..CELL_BOX_WIDTH_COUNT{
