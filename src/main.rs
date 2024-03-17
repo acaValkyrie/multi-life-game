@@ -42,14 +42,9 @@ impl Cell {
 pub fn main() {
     
     let cell_size: u32 = 4;
-    let color_white = Color::RGB(173, 186, 199);
     let color_green = Color::RGB(133, 219, 109);
-    let color = color_green;
-    let mut cell = Cell::new(0, 0, color, cell_size);
-    
-    const CELL_BOX_WIDTH_COUNT: usize = 256;
-    let mut cell_viabilities_before: [[bool; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT] = [[false; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT];
-    let mut cell_viabilities_after: [[bool; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT] = [[false; CELL_BOX_WIDTH_COUNT]; CELL_BOX_WIDTH_COUNT];
+    let color_blue = Color::RGB(86, 212, 187);
+    let color_yellow = Color::RGB(220, 234, 127);
     let mut rng = rand::thread_rng();
     for i in 0..CELL_BOX_WIDTH_COUNT{
         for j in 0..CELL_BOX_WIDTH_COUNT{
