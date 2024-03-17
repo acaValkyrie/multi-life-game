@@ -53,13 +53,9 @@ pub fn main() {
     let mut cell_viabilities_before: [[[bool; CELL_TYPE_COUNT]; CELL_BOX_WIDTH_COUNT]; CELL_BOX_HEIGHT_COUNT] = [[[false; CELL_TYPE_COUNT]; CELL_BOX_WIDTH_COUNT]; CELL_BOX_HEIGHT_COUNT];
     let mut cell_viabilities_after: [[[bool; CELL_TYPE_COUNT]; CELL_BOX_WIDTH_COUNT]; CELL_BOX_HEIGHT_COUNT] = [[[false; CELL_TYPE_COUNT]; CELL_BOX_WIDTH_COUNT]; CELL_BOX_HEIGHT_COUNT];
     let mut rng = rand::thread_rng();
-    for i in 0..CELL_BOX_HEIGHT_COUNT{
-        for j in 0..CELL_BOX_WIDTH_COUNT{
-            for k in 0..CELL_TYPE_COUNT{
-                cell_viabilities_before[i][j][k] = rng.gen();
-            }
-        }
-    }
+    for i in 0..CELL_BOX_HEIGHT_COUNT{ for j in 0..CELL_BOX_WIDTH_COUNT{ for k in 0..CELL_TYPE_COUNT{
+        cell_viabilities_before[i][j][k] = rng.gen();
+    }}}
 
     let window_width = cell_size*CELL_BOX_WIDTH_COUNT as u32;
     let window_height = cell_size*CELL_BOX_HEIGHT_COUNT as u32;
@@ -74,52 +70,42 @@ pub fn main() {
         canvas.set_draw_color(Color::RGB(28, 33, 40));
         canvas.clear();
 
-        for i in 0..CELL_BOX_HEIGHT_COUNT{
-            for j in 0..CELL_BOX_WIDTH_COUNT{
-                for k in 0..CELL_TYPE_COUNT{
-                    // beforeを元にしてafterを作成
-                    let mut count: u32 = 0;
-                    for x in 0..3{
-                        for y in 0..3{
-                            if x == 1 && y == 1{ continue; }
-                            let x_index: i32 = j as i32 + x - 1;
-                            let y_index: i32 = i as i32 + y - 1;
-                            if x_index < 0 || x_index >= CELL_BOX_WIDTH_COUNT as i32 || y_index < 0 || y_index >= CELL_BOX_HEIGHT_COUNT as i32{ continue; }
-                            if cell_viabilities_before[y_index as usize][x_index as usize][k] == true{
-                                count += 1;
-                            }
-                        }
-                    }
-                    if cell_viabilities_before[i][j][k] == true{
-                        if count == 2 || count == 3{
-                            cell_viabilities_after[i][j][k] = true;
-                        }else{
-                            cell_viabilities_after[i][j][k] = false;
-                        }
-                    }else{
-                        if count == 3{
-                            cell_viabilities_after[i][j][k] = true;
-                        }else{
-                            cell_viabilities_after[i][j][k] = false;
-                        }
-                    }
+        for i in 0..CELL_BOX_HEIGHT_COUNT{ for j in 0..CELL_BOX_WIDTH_COUNT{ for k in 0..CELL_TYPE_COUNT{
+            // beforeを元にしてafterを作成
+            let mut count: u32 = 0;
+            for x in 0..3{ for y in 0..3{
+                if x == 1 && y == 1{ continue; }
+                let x_index: i32 = j as i32 + x - 1;
+                let y_index: i32 = i as i32 + y - 1;
+                if x_index < 0 || x_index >= CELL_BOX_WIDTH_COUNT as i32 || y_index < 0 || y_index >= CELL_BOX_HEIGHT_COUNT as i32{ continue; }
+                if cell_viabilities_before[y_index as usize][x_index as usize][k] == true{
+                    count += 1;
+                }
+            }}
+            if cell_viabilities_before[i][j][k] == true{
+                if count == 2 || count == 3{
+                    cell_viabilities_after[i][j][k] = true;
+                }else{
+                    cell_viabilities_after[i][j][k] = false;
+                }
+            }else{
+                if count == 3{
+                    cell_viabilities_after[i][j][k] = true;
+                }else{
+                    cell_viabilities_after[i][j][k] = false;
                 }
             }
-        }
+        }}}
         
         
-        for i in 0..CELL_BOX_HEIGHT_COUNT{
-            for j in 0..CELL_BOX_WIDTH_COUNT{
-                for k in 0..CELL_TYPE_COUNT{
-                    if cell_viabilities_after[i][j][k] == true{
-                        let x: u32 = (j * cell_size as usize) as u32;
-                        let y: u32 = (i * cell_size as usize) as u32;
-                        cell[k].set_position(x, y);
-                        cell[k].draw(&mut canvas);
-                    }
-                }
+        for i in 0..CELL_BOX_HEIGHT_COUNT{ for j in 0..CELL_BOX_WIDTH_COUNT{ for k in 0..CELL_TYPE_COUNT{
+            if cell_viabilities_after[i][j][k] == true{
+                let x: u32 = (j * cell_size as usize) as u32;
+                let y: u32 = (i * cell_size as usize) as u32;
+                cell[k].set_position(x, y);
+                cell[k].draw(&mut canvas);
             }
-        }
+        }}}
 
         // afterの内容をbeforeにコピー
         // afterのさすアドレスとbeforeのさすアドレスを交換
