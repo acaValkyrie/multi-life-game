@@ -96,6 +96,20 @@ pub fn main() {
                 }
             }
         }}}
+
+        for i in 0..CELL_BOX_HEIGHT_COUNT{ for j in 0..CELL_BOX_WIDTH_COUNT{
+            for k in 0..CELL_TYPE_COUNT{
+                if k == 0 { continue; }
+                if cell_viabilities_after[i][j][k] == true{
+                    if cell_viabilities_after[i][j][k-1] == true{
+                        cell_viabilities_after[i][j][k-1] = false;
+                    }
+                    else{
+                        // cell_viabilities_after[i][j][k] = false;
+                    }
+                }
+            }
+        }}
         
         
         for i in 0..CELL_BOX_HEIGHT_COUNT{ for j in 0..CELL_BOX_WIDTH_COUNT{ for k in 0..CELL_TYPE_COUNT{
